@@ -70,7 +70,7 @@ class MainActivity: FlutterFragmentActivity()
 
 ### 3. Usage
 
-#### Initialize
+#### Initialize (Android & iOS separately - Recommended)
 
 ```dart
 import 'package:admob_easy_manager/admob_easy_manager.dart';
@@ -78,18 +78,31 @@ import 'package:admob_easy_manager/admob_easy_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final ids = AdMobIds.single(
+  // Android Ad Unit IDs
+  final androidIds = AdMobIds.single(
     appId: "ca-app-pub-xxxxxxxx~xxxxxxxxxx",
-    interstitialId: "ca-app-pub-xxxxxxxx/xxxxxxxxxx",
     bannerId: "ca-app-pub-xxxxxxxx/xxxxxxxxxx",
+    interstitialId: "ca-app-pub-xxxxxxxx/xxxxxxxxxx",
     appOpenId: "ca-app-pub-xxxxxxxx/xxxxxxxxxx",
-    nativeId: "ca-app-pub-xxxxxxxx/xxxxxxxxxx",
     rewardedId: "ca-app-pub-xxxxxxxx/xxxxxxxxxx",
+    nativeId: "ca-app-pub-xxxxxxxx/xxxxxxxxxx",
     rewardedIntId: "ca-app-pub-xxxxxxxx/xxxxxxxxxx",
   );
 
+  // iOS Ad Unit IDs
+  final iosIds = AdMobIds.single(
+    appId: "ca-app-pub-yyyyyyyy~yyyyyyyyyy",
+    bannerId: "ca-app-pub-yyyyyyyy/yyyyyyyyyy",
+    interstitialId: "ca-app-pub-yyyyyyyy/yyyyyyyyyy",
+    appOpenId: "ca-app-pub-yyyyyyyy/yyyyyyyyyy",
+    rewardedId: "ca-app-pub-yyyyyyyy/yyyyyyyyyy",
+    nativeId: "ca-app-pub-yyyyyyyy/yyyyyyyyyy",
+    rewardedIntId: "ca-app-pub-yyyyyyyy/yyyyyyyyyy",
+  );
+
   await AdsManager.instance.init(
-    ids: ids,
+    androidIds: androidIds,
+    iosIds: iosIds,
     status: AdsStatus.hybrid,
     testDeviceIds: [
       'YOUR_TEST_DEVICE_ID',
@@ -99,6 +112,9 @@ void main() async {
 
   runApp(const MyApp());
 }
+```
+
+> **Note**: You can also omit any ad formats you don't use (e.g. only provide `bannerId` and `interstitialId`), or pass a unified `ids: AdMobIds(...)` if you prefer.
 ```
 
 #### Show Interstitial Ad

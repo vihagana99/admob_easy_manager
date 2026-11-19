@@ -22,6 +22,8 @@ class AdsManager {
   AdsManager._internal();
 
   AdMobIds? _ids;
+  AdMobIds? _androidIds;
+  AdMobIds? _iosIds;
   AdsStatus _status = AdsStatus.enabled;
   bool _forceTestAds = false;
 
@@ -32,13 +34,23 @@ class AdsManager {
   final Map<String, Future<void>> _loadingTasks = {};
 
   /// Initializes the Mobile Ads SDK with IDs, mode status, and optional test devices.
+  /// Provide platform-specific IDs via [androidIds] and [iosIds],
+  /// or a unified [ids] configuration for both.
   Future<void> init({
-    required AdMobIds ids,
+    AdMobIds? ids,
+    AdMobIds? androidIds,
+    AdMobIds? iosIds,
     required AdsStatus status,
     List<String>? testDeviceIds,
     Color? loadingColor,
   }) async {
+    assert(
+      ids != null || androidIds != null || iosIds != null,
+      'At least one of ids, androidIds, or iosIds must be provided to init().',
+    );
     _ids = ids;
+    _androidIds = androidIds;
+    _iosIds = iosIds;
     _status = status;
 
     if (loadingColor != null) {
@@ -79,10 +91,20 @@ class AdsManager {
   /// Returns true if ad loading and display are disabled.
   bool get isAdsDisabled => effectiveStatus == AdsStatus.disabled;
 
+  /// Returns the active [AdMobIds] configured for the current platform.
+  AdMobIds? get currentIds {
+    if (!kIsWeb && Platform.isAndroid) {
+      return _androidIds ?? _ids;
+    } else if (!kIsWeb && Platform.isIOS) {
+      return _iosIds ?? _ids;
+    }
+    return _ids;
+  }
+
   /// Returns the appropriate Ad Unit ID for the given format and index.
   String getAdUnitId(AdsUnit unit, int index) {
     if (effectiveStatus == AdsStatus.testing) {
-      if (Platform.isAndroid) {
+      if (!kIsWeb && Platform.isAndroid) {
         switch (unit) {
           case AdsUnit.interstitial:
             return 'ca-app-pub-3940256099942544/1033173712';
@@ -97,7 +119,7 @@ class AdsManager {
           case AdsUnit.rewardedInt:
             return 'ca-app-pub-3940256099942544/5354046379';
         }
-      } else if (Platform.isIOS) {
+      } else if (!kIsWeb && Platform.isIOS) {
         switch (unit) {
           case AdsUnit.interstitial:
             return 'ca-app-pub-3940256099942544/4411468910';
@@ -115,9 +137,13 @@ class AdsManager {
       }
     }
 
-    final ids = _ids;
+    final ids = currentIds;
     if (ids == null) {
-      throw StateError('AdsManager not initialized. Call init() before requesting ads.');
+      final platform = !kIsWeb ? Platform.operatingSystem : 'web';
+      throw StateError(
+        'AdsManager has no IDs configured for platform "$platform". '
+        'Provide ${platform == "ios" ? "iosIds" : "androidIds"} or unified ids to AdsManager.instance.init().',
+      );
     }
 
     switch (unit) {

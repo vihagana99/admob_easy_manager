@@ -1,5 +1,5 @@
 /// Container for AdMob Application ID and format-specific Ad Unit IDs.
-/// Supports both single ID setups and round-robin multiple ID setups.
+/// Supports single ID setups, round-robin multiple ID setups, and optional format configurations.
 class AdMobIds {
   final String appId;
   final List<String> interstitialIds;
@@ -10,52 +10,76 @@ class AdMobIds {
   final List<String> rewardedIntIds;
 
   const AdMobIds({
-    required this.appId,
-    required this.interstitialIds,
-    required this.bannerIds,
-    required this.appOpenIds,
-    required this.rewardedIds,
-    required this.nativeIds,
-    required this.rewardedIntIds,
-  }) : assert(interstitialIds.length > 0, 'interstitialIds cannot be empty'),
-       assert(bannerIds.length > 0, 'bannerIds cannot be empty'),
-       assert(appOpenIds.length > 0, 'appOpenIds cannot be empty'),
-       assert(rewardedIds.length > 0, 'rewardedIds cannot be empty'),
-       assert(nativeIds.length > 0, 'nativeIds cannot be empty'),
-       assert(rewardedIntIds.length > 0, 'rewardedIntIds cannot be empty');
+    this.appId = '',
+    this.interstitialIds = const [],
+    this.bannerIds = const [],
+    this.appOpenIds = const [],
+    this.rewardedIds = const [],
+    this.nativeIds = const [],
+    this.rewardedIntIds = const [],
+  });
 
   /// Convenience constructor for apps with one Ad Unit ID per ad format.
+  /// Formats can be omitted if not used in the application.
   factory AdMobIds.single({
-    required String appId,
-    required String interstitialId,
-    required String bannerId,
-    required String appOpenId,
-    required String rewardedId,
-    required String nativeId,
-    required String rewardedIntId,
+    String appId = '',
+    String? interstitialId,
+    String? bannerId,
+    String? appOpenId,
+    String? rewardedId,
+    String? nativeId,
+    String? rewardedIntId,
   }) {
     return AdMobIds(
       appId: appId,
-      interstitialIds: [interstitialId],
-      bannerIds: [bannerId],
-      appOpenIds: [appOpenId],
-      rewardedIds: [rewardedId],
-      nativeIds: [nativeId],
-      rewardedIntIds: [rewardedIntId],
+      interstitialIds: interstitialId != null ? [interstitialId] : const [],
+      bannerIds: bannerId != null ? [bannerId] : const [],
+      appOpenIds: appOpenId != null ? [appOpenId] : const [],
+      rewardedIds: rewardedId != null ? [rewardedId] : const [],
+      nativeIds: nativeId != null ? [nativeId] : const [],
+      rewardedIntIds: rewardedIntId != null ? [rewardedIntId] : const [],
     );
   }
 
-  String getInterstitial(int index) =>
-      interstitialIds[index.abs() % interstitialIds.length];
+  String getInterstitial(int index) {
+    if (interstitialIds.isEmpty) {
+      throw StateError('No interstitial ad unit IDs configured in AdMobIds.');
+    }
+    return interstitialIds[index.abs() % interstitialIds.length];
+  }
 
-  String getBanner(int index) => bannerIds[index.abs() % bannerIds.length];
+  String getBanner(int index) {
+    if (bannerIds.isEmpty) {
+      throw StateError('No banner ad unit IDs configured in AdMobIds.');
+    }
+    return bannerIds[index.abs() % bannerIds.length];
+  }
 
-  String getAppOpen(int index) => appOpenIds[index.abs() % appOpenIds.length];
+  String getAppOpen(int index) {
+    if (appOpenIds.isEmpty) {
+      throw StateError('No app open ad unit IDs configured in AdMobIds.');
+    }
+    return appOpenIds[index.abs() % appOpenIds.length];
+  }
 
-  String getRewarded(int index) => rewardedIds[index.abs() % rewardedIds.length];
+  String getRewarded(int index) {
+    if (rewardedIds.isEmpty) {
+      throw StateError('No rewarded ad unit IDs configured in AdMobIds.');
+    }
+    return rewardedIds[index.abs() % rewardedIds.length];
+  }
 
-  String getNative(int index) => nativeIds[index.abs() % nativeIds.length];
+  String getNative(int index) {
+    if (nativeIds.isEmpty) {
+      throw StateError('No native ad unit IDs configured in AdMobIds.');
+    }
+    return nativeIds[index.abs() % nativeIds.length];
+  }
 
-  String getRewardedInterstitial(int index) =>
-      rewardedIntIds[index.abs() % rewardedIntIds.length];
+  String getRewardedInterstitial(int index) {
+    if (rewardedIntIds.isEmpty) {
+      throw StateError('No rewarded interstitial ad unit IDs configured in AdMobIds.');
+    }
+    return rewardedIntIds[index.abs() % rewardedIntIds.length];
+  }
 }
