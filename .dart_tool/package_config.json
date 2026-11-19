@@ -200,7 +200,7 @@
       "languageVersion": "3.13"
     },
     {
-      "name": "admob_ads_manager",
+      "name": "admob_easy_manager",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.0"

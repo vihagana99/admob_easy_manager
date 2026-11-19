@@ -1,6 +1,6 @@
-# AdMob Ads Manager (v2.0.0)
+# AdMob Easy Manager (v1.0.0)
 
-A robust, production-grade Flutter wrapper for Google Mobile Ads SDK. Built to eliminate boilerplate, guarantee seamless test ads on physical devices, prevent memory leaks, and provide fail-safe loading overlays with zero duplicate callbacks.
+A robust, production-grade Flutter wrapper for the Google Mobile Ads SDK. Built to eliminate boilerplate, guarantee seamless test ads on physical devices, prevent memory leaks, and provide fail-safe loading overlays with zero duplicate callbacks.
 
 ## Features
 
@@ -29,17 +29,17 @@ In your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  admob_ads_manager:
+  admob_easy_manager:
     git:
-      url: https://github.com/YOUR_USERNAME/admob_ads_manager.git
+      url: https://github.com/vihagana99/admob_easy_manager.git
 ```
 
 Or for local development:
 
 ```yaml
 dependencies:
-  admob_ads_manager:
-    path: ../admob_ads_manager
+  admob_easy_manager:
+    path: ../admob_easy_manager
 ```
 
 ### 2. Platform Setup
@@ -73,7 +73,7 @@ class MainActivity: FlutterFragmentActivity()
 #### Initialize
 
 ```dart
-import 'package:admob_ads_manager/admob_ads_manager.dart';
+import 'package:admob_easy_manager/admob_easy_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -92,7 +92,7 @@ void main() async {
     ids: ids,
     status: AdsStatus.hybrid,
     testDeviceIds: [
-      '812C0EC2FB8FD8BE632D8224AF713B09',
+      'YOUR_TEST_DEVICE_ID',
       'kGADSimulatorID',
     ],
   );
@@ -123,10 +123,10 @@ await AdsManager.instance.showRewarded(
   0,
   RewardedCallbacks(
     onRewarded: () {
-      grantCoinsOrTokens();
+      grantReward();
     },
     onError: (err) {
-      showErrorDialog();
+      showError();
     },
   ),
 );

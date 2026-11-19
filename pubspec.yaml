@@ -1,7 +1,7 @@
-name: admob_ads_manager
-description: A robust, production-ready Flutter wrapper for Google Mobile Ads SDK with test device whitelisting, hybrid mode, safe overlays, and zero-duplicate callbacks.
-version: 2.0.0
-homepage: https://github.com
+name: admob_easy_manager
+description: A robust, production-grade Flutter wrapper for Google Mobile Ads SDK with test device whitelisting, hybrid mode, safe overlays, and zero-duplicate callbacks.
+version: 1.0.0
+homepage: https://github.com/vihagana99/admob_easy_manager
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
